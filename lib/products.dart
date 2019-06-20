@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import './pages/product.dart';
 
 class Products extends StatelessWidget {
-  final List<String> products;
+  final List<Map<String,String>> products;
   Products(this.products);
 
   Widget _buildProductItem(BuildContext context, int index) {
     return Card(
       child: Column(
         children: <Widget>[
-          Image.asset('assests/pic.png'),
+          Image.asset(products[index]),
           Text(products[index]),
           ButtonBar(
             alignment: MainAxisAlignment.center,
