@@ -4,34 +4,10 @@ import 'dart:async';
 class ProductPage extends StatelessWidget {
   final String title;
   final String imgUrl;
+  final double price;
+  final String description;
 
-  ProductPage(this.title, this.imgUrl);
-
-  _showWarningDialogue(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Are you sure?"),
-            content: Text("This action cannot be undone"),
-            actions: <Widget>[
-              FlatButton(
-                child: Text("Discard"),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              FlatButton(
-                child: Text('Continue'),
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context, true);
-                },
-              ),
-            ],
-          );
-        });
-  }
+  ProductPage(this.title, this.imgUrl, this.price, this.description);
 
   @override
   Widget build(BuildContext context) {
@@ -50,14 +26,39 @@ class ProductPage extends StatelessWidget {
             Image.asset(imgUrl),
             Container(
               padding: EdgeInsets.all(10.0),
-              child: Text(title),
+              child: Text(
+                title,
+                style: TextStyle(
+                    fontSize: 26,
+                    fontFamily: 'Oswald',
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'Washington D.C.',
+                  style: TextStyle(fontFamily: 'Oswald', color: Colors.grey),
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                  child: Text(
+                    '|',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+                Text(
+                  '\$' + price.toString(),
+                  style: TextStyle(fontFamily: 'Oswald', color: Colors.grey),
+                )
+              ],
             ),
             Container(
-              padding: EdgeInsets.all(10.0),
-              child: RaisedButton(
-                color: Theme.of(context).accentColor,
-                child: Text("Delete"),
-                onPressed: () => _showWarningDialogue(context),
+              margin: EdgeInsets.all(10.0),
+              child: Text(
+                description,
+                textAlign: TextAlign.center,
               ),
             ),
           ],
