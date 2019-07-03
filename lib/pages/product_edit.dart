@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 class ProductEditPage extends StatefulWidget {
   final Function addProduct;
   final Function updateProduct;
+  final int productIndex;
   final Map<String, dynamic> product;
 
-  ProductEditPage({this.addProduct, this.product, this.updateProduct});
+  ProductEditPage(
+      {this.addProduct, this.product, this.updateProduct, this.productIndex});
 
   @override
   State<StatefulWidget> createState() {
@@ -25,6 +27,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   Widget _buildTitleTextField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product Title'),
+      initialValue: widget.product == null ? '' : widget.product['title'],
       validator: (String value) {
         if (value.isEmpty || value.length < 5) {
           return 'Title is required and should be more than 5 characters';
@@ -40,6 +43,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product Description'),
       maxLines: 5,
+      initialValue: widget.product == null ? '' : widget.product['description'],
       validator: (String value) {
         if (value.isEmpty || value.length < 10) {
           return 'Description is required and should be more than 10 characters';
@@ -55,6 +59,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Product Price'),
       keyboardType: TextInputType.number,
+      initialValue:
+          widget.product == null ? '' : widget.product['price'].toString(),
       validator: (String value) {
         if (value.isEmpty ||
             !RegExp(r'^(?:[1-9]\d*|0)?(?:\.\d+)?$').hasMatch(value)) {
@@ -72,12 +78,15 @@ class _ProductEditPageState extends State<ProductEditPage> {
       return;
     }
     _formKey.currentState.save();
-    widget.addProduct(_formData);
+    if (widget.product == null) {
+      widget.addProduct(_formData);
+    } else {
+      widget.updateProduct(widget.productIndex, _formData);
+    }
     Navigator.pushReplacementNamed(context, '/products');
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildGestureDetector(BuildContext context) {
     final double _deviceWidth = MediaQuery.of(context).size.width;
     final double _targetWidth =
         _deviceWidth > 550.0 ? 500.0 : _deviceWidth * .95;
@@ -109,5 +118,16 @@ class _ProductEditPageState extends State<ProductEditPage> {
         ),
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Widget pageContent = _buildGestureDetector(context);
+    return widget.product == null
+        ? pageContent
+        : Scaffold(
+            appBar: AppBar(title: Text('Edit Product')),
+            body: pageContent,
+          );
   }
 }
